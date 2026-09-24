@@ -16,22 +16,22 @@ st.set_page_config(page_title="Candlestick Real-Time", page_icon="📈", layout=
 TIMEZONES = {"Việt Nam (UTC+7)": "Asia/Ho_Chi_Minh", "UTC": "UTC", "Tokyo (UTC+9)": "Asia/Tokyo",
              "New York": "America/New_York"}
 
+# Streamlit làm mờ dần (opacity/transition) các phần tử "cũ" mỗi khi fragment tự chạy lại (run_every)
+# trong lúc chờ dữ liệu mới, gây cảm giác chớp/nhấp nháy dù giá chỉ đổi một chút. [data-stale] phủ vùng
+# biểu đồ/KPI/bảng; [role=tab*] và details/summary phủ thêm tab + expander (hai khu vực này Streamlit
+# không gắn data-stale nên phải chặn riêng). CSS bên dưới chỉ dùng ASCII thuần vì st.markdown từng cắt
+# cụt nội dung HTML dài khi trộn lẫn ký tự tiếng Việt có dấu ngay trong chuỗi.
 st.markdown(
     """
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <style>
     .block-container {padding-top: 2.2rem;}
-    /* Streamlit làm mờ dần (opacity/transition) các phần tử "cũ" mỗi khi fragment tự chạy lại
-       (run_every) trong lúc chờ dữ liệu mới, gây cảm giác chớp/nhấp nháy dù giá chỉ đổi một chút.
-       [data-stale] phủ vùng biểu đồ/KPI/bảng; [role=tab*] và details/summary phủ thêm tab + expander
-       (hai khu vực này Streamlit không gắn data-stale nên phải chặn riêng). */
     [data-stale="true"], [data-stale="true"] * {opacity: 1 !important; transition: none !important;}
     [role="tablist"], [role="tab"] {opacity: 1 !important; transition: none !important;}
     details, summary {opacity: 1 !important;}
     div[data-testid="stElementContainer"], div[data-testid="stVerticalBlock"],
     div[data-testid="stVerticalBlockBorderWrapper"] {transition: none !important;}
-
-    /* ---- Tiêu đề & sidebar ---- */
+    /* ---- title & sidebar ---- */
     .app-title {display: flex; align-items: center; gap: .55rem; font-size: 1.9rem; font-weight: 800;
                 margin: 0 0 .2rem;}
     .app-title i {color: #2b6cb0;}
@@ -43,8 +43,7 @@ st.markdown(
     .section-heading {display: flex; align-items: center; gap: .45rem; font-weight: 700; font-size: .95rem;
                       color: #374151; margin: .2rem 0 .5rem;}
     .section-heading i {color: #6b7280;}
-
-    /* ---- Thẻ KPI ---- */
+    /* ---- KPI cards ---- */
     .kpi-row {display: flex; gap: 10px; flex-wrap: wrap; margin: 4px 0 14px;}
     .kpi-card {flex: 1 1 150px; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
               padding: 10px 14px; box-shadow: 0 1px 2px rgba(0,0,0,.04);}
@@ -53,21 +52,18 @@ st.markdown(
     .kpi-value {font-size: 1.5rem; font-weight: 800; margin-top: 2px; line-height: 1.15;}
     .kpi-note {font-size: .78rem; color: #6b7280; margin-top: 2px;}
     .kpi-up {color: #16a34a;} .kpi-down {color: #dc2626;}
-
-    /* ---- Banner cảnh báo dữ liệu mô phỏng ---- */
+    /* ---- synthetic-data warning banner ---- */
     .alert-sim {display: flex; align-items: flex-start; gap: .6rem; background: #fffbeb; border: 1px solid #fde68a;
                color: #92400e; border-radius: 10px; padding: .7rem .9rem; margin: .3rem 0 .8rem; font-size: .92rem;}
     .alert-sim i {font-size: 1.1rem; margin-top: .1rem;}
-
-    /* ---- Dòng trạng thái cập nhật ---- */
+    /* ---- status row ---- */
     .status-row {display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; color: #6b7280;
                 font-size: .85rem; margin-top: .3rem;}
     .status-row span {display: flex; align-items: center; gap: .35rem;}
     .status-live {color: #16a34a;} .status-paused {color: #d97706;}
     .status-live i {animation: pulse 1.6s ease-in-out infinite;}
     @keyframes pulse {0%, 100% {opacity: 1;} 50% {opacity: .35;}}
-
-    /* ---- Khối giải thích ---- */
+    /* ---- about section ---- */
     .about-h {display: flex; align-items: center; gap: .5rem; font-weight: 800; font-size: 1.15rem;
              margin: 1.1rem 0 .4rem; color: #1f2937;}
     .about-h i {color: #2b6cb0;}

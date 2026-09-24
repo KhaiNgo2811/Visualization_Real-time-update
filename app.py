@@ -22,6 +22,10 @@ st.markdown(
     [data-testid="stMetricValue"] {font-size: 1.55rem; font-weight: 800;}
     [data-testid="stMetricLabel"] {color: #6b7280; font-weight: 600;}
     .block-container {padding-top: 2.2rem;}
+    /* Streamlit làm mờ (opacity/transition) các phần tử "cũ" mỗi khi fragment tự chạy lại
+       (run_every), gây cảm giác chớp màn hình dù dữ liệu chỉ đổi một chút. Tắt hiệu ứng đó. */
+    [data-stale="true"] {opacity: 1 !important; transition: none !important;}
+    div[data-testid="stElementContainer"], div[data-testid="stVerticalBlock"] {transition: none !important;}
     </style>
     """,
     unsafe_allow_html=True,

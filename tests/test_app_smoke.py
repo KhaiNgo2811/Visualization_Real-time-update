@@ -17,8 +17,8 @@ def test_app_renders_offline_with_synthetic_banner(monkeypatch):
     _offline(monkeypatch)
     at = AppTest.from_file(APP, default_timeout=60).run()
     assert not at.exception
-    assert any("MÔ PHỎNG" in w.value for w in at.warning)
-    assert len(at.metric) == 6
+    assert any("MÔ PHỎNG" in m.value for m in at.markdown)
+    assert sum(m.value.count('class="kpi-card"') for m in at.markdown) == 6
 
 
 def test_app_switch_to_replay(monkeypatch):
